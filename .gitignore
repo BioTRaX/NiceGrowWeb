@@ -1,0 +1,13 @@
+# Archivos temporales
+*.log
+*.tmp
+
+# Dependencias de Node
+node_modules/
+
+# Dependencias de PHP
+vendor/
+
+# IDEs
+.vscode/
+.idea/

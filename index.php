@@ -48,82 +48,7 @@ function total_carrito($productos, $carrito) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nice Grow - Tienda</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            color: #222;
-        }
-        header {
-            background-color: #ffffff;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        header h1 {
-            margin: 0;
-            color: #6A1B9A;
-        }
-        nav a {
-            margin-left: 1.5rem;
-            text-decoration: none;
-            color: #333;
-            font-weight: 600;
-        }
-        .hero {
-            background: linear-gradient(135deg, #6A1B9A, #388E3C);
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-        .hero h2 {
-            margin: 0 0 1rem;
-            font-size: 2.5rem;
-        }
-        .productos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            padding: 2rem;
-        }
-        .producto {
-            background: white;
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .producto h3 {
-            margin-top: 0;
-            color: #388E3C;
-        }
-        .producto p {
-            margin: 0.5rem 0;
-        }
-        .producto a {
-            display: inline-block;
-            margin-top: 0.5rem;
-            text-decoration: none;
-            background: #6A1B9A;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-        }
-        .carrito {
-            padding: 2rem;
-            background: #ffffff;
-        }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background: #eee;
-            font-size: 0.9rem;
-            margin-top: 2rem;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
     <header>
@@ -169,5 +94,6 @@ function total_carrito($productos, $carrito) {
     <footer>
         © <?= date('Y') ?> Nice Grow. Todos los derechos reservados.
     </footer>
+    <script src="assets/js/funciones.js"></script>
 </body>
 </html>
