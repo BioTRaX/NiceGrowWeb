@@ -45,41 +45,129 @@ function total_carrito($productos, $carrito) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nice Grow - Tienda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f7f7f7; }
-        .producto, .carrito { margin: 10px 0; padding: 10px; background: white; border-radius: 6px; }
-        .carrito { border: 1px solid #ccc; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #222;
+        }
+        header {
+            background-color: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            color: #6A1B9A;
+        }
+        nav a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+        }
+        .hero {
+            background: linear-gradient(135deg, #6A1B9A, #388E3C);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .hero h2 {
+            margin: 0 0 1rem;
+            font-size: 2.5rem;
+        }
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+        .producto {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .producto h3 {
+            margin-top: 0;
+            color: #388E3C;
+        }
+        .producto p {
+            margin: 0.5rem 0;
+        }
+        .producto a {
+            display: inline-block;
+            margin-top: 0.5rem;
+            text-decoration: none;
+            background: #6A1B9A;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        .carrito {
+            padding: 2rem;
+            background: #ffffff;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #eee;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
-    <h1>🛒 Tienda Nice Grow</h1>
+    <header>
+        <h1>Nice Grow</h1>
+        <nav>
+            <a href="#">Inicio</a>
+            <a href="#">Tienda</a>
+            <a href="#">Contacto</a>
+        </nav>
+    </header>
 
-    <h2>Productos</h2>
-    <?php foreach ($productos as $id => $producto): ?>
-        <div class="producto">
-            <strong><?= htmlspecialchars($producto['nombre']) ?></strong><br>
-            Precio: $<?= $producto['precio'] ?><br>
-            <a href="?agregar=<?= $id ?>">Agregar al carrito</a>
-        </div>
-    <?php endforeach; ?>
+    <section class="hero">
+        <h2>Cultivá con estilo y conciencia 🌱</h2>
+        <p>Insumos premium para tu cultivo de hongos y plantas</p>
+    </section>
 
-    <h2>Carrito</h2>
-    <?php if (!empty($_SESSION['carrito'])): ?>
-        <div class="carrito">
+    <section class="productos">
+        <?php foreach ($productos as $id => $producto): ?>
+            <div class="producto">
+                <h3><?= htmlspecialchars($producto['nombre']) ?></h3>
+                <p>Precio: $<?= $producto['precio'] ?></p>
+                <a href="?agregar=<?= $id ?>">Agregar al carrito</a>
+            </div>
+        <?php endforeach; ?>
+    </section>
+
+    <section class="carrito">
+        <h2>🛒 Carrito</h2>
+        <?php if (!empty($_SESSION['carrito'])): ?>
             <?php foreach ($_SESSION['carrito'] as $id => $cantidad): ?>
                 <p><?= $productos[$id]['nombre'] ?> x <?= $cantidad ?> - $<?= $productos[$id]['precio'] * $cantidad ?>
                 <a href="?eliminar=<?= $id ?>">[Eliminar]</a></p>
             <?php endforeach; ?>
             <p><strong>Total: $<?= total_carrito($productos, $_SESSION['carrito']) ?></strong></p>
-
-            <!-- Botón de pago de Mercado Pago -->
             <form action="pagar.php" method="POST">
                 <button type="submit">Pagar con Mercado Pago</button>
             </form>
-        </div>
-    <?php else: ?>
-        <p>El carrito está vacío.</p>
-    <?php endif; ?>
+        <?php else: ?>
+            <p>El carrito está vacío.</p>
+        <?php endif; ?>
+    </section>
+
+    <footer>
+        © <?= date('Y') ?> Nice Grow. Todos los derechos reservados.
+    </footer>
 </body>
 </html>
