@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: add_categories_migration.php
+# Ubicación: config/add_categories_migration.php
+# Descripción: Migración para crear la tabla de categorías y vincular productos
+*/
 /**
  * Migración: crear tabla categories y asignar categorías a productos
  */

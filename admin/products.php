@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: products.php
+# Ubicación: admin/products.php
+# Descripción: Gestión de productos para administradores y vendedores
+*/
 require_once '../includes/auth.php';
 require_once '../includes/upload.php';
 
