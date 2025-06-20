@@ -75,14 +75,7 @@ function total_carrito($productos, $carrito) {
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
-    <header>
-        <h1>Nice Grow</h1>        <nav>
-            <a href="#">Inicio</a>
-            <a href="#">Tienda</a>
-            <a href="#">Contacto</a>
-            <a href="admin/login.php" style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px;">Admin</a>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/includes/header.php'; ?>
 
     <section class="hero container text-center py-5" style="background: linear-gradient(135deg, #6A1B9A, #388E3C);">
         <h1>Cultivá con estilo y conciencia 🌱</h1>
