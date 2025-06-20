@@ -1,13 +1,10 @@
 <?php
-/*
+
 # Nombre: install.php
 # Ubicación: config/install.php
-# Descripción: Instalador inicial de la base de datos y tablas
-*/
-/**
- * Script de instalación de base de datos
- * Ejecutar una sola vez para crear las tablas
- */
+# Descripción: Instalador que crea la base de datos y el usuario administrador.
+
+
 
 echo "<!DOCTYPE html>
 <html lang='es'>
@@ -34,6 +31,21 @@ echo "<!DOCTYPE html>
             <h1>🌱 NiceGrowWeb</h1>
             <p>Instalador de Base de Datos</p>
         </div>";
+
+$adminPassword = getenv('ADMIN_PASSWORD');
+if (!$adminPassword) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['admin_password'])) {
+        $adminPassword = $_POST['admin_password'];
+    } else {
+        echo "<form method='POST' style='text-align:center; margin:20px;'>";
+        echo "<label>Contrase\u00f1a para el usuario admin:</label>";
+        echo "<input type='password' name='admin_password' required style='margin-left:10px;'>";
+        echo "<button type='submit' class='btn btn-primary'>Instalar</button>";
+        echo "</form>";
+        echo "</div></body></html>";
+        exit;
+    }
+}
 
 // Conectar sin especificar base de datos para poder crearla
 try {
@@ -105,7 +117,7 @@ INSERT IGNORE INTO roles (id, name, description) VALUES
 (2, 'seller', 'Vendedor - CRUD productos propios'),
 (3, 'viewer', 'Solo lectura - Visualización de productos');
 
--- Insertar usuario admin por defecto (usuario: BioTRaX, contraseña: Bio4256)
+-- Insertar usuario admin por defecto (usuario: BioTRaX)
 INSERT IGNORE INTO users (username, email, password, role_id) VALUES
 ('BioTRaX', 'admin@nicegrowweb.com', ?, 1);
 
@@ -117,8 +129,7 @@ INSERT IGNORE INTO products (id, name, price, description) VALUES
 ";
 
 try {
-    // Generar hash para la contraseña del admin
-    $adminPassword = 'Bio4256';
+    // Generar hash para la contraseña del admin proporcionada
     $hashedPassword = password_hash($adminPassword, PASSWORD_DEFAULT);
     
     // Ejecutar las consultas
@@ -139,7 +150,7 @@ try {
     echo "<div class='status success'>✅ Tablas creadas correctamente</div>";
     echo "<div class='status success'>✅ Roles insertados: admin, seller, viewer</div>";
     echo "<div class='status success'>✅ Productos de ejemplo agregados</div>";
-    echo "<div class='status success'>👤 Usuario admin creado: <strong>BioTRaX</strong> / <strong>Bio4256</strong></div>";
+    echo "<div class='status success'>👤 Usuario admin creado: <strong>BioTRaX</strong> / <strong>" . htmlspecialchars($adminPassword) . "</strong></div>";
     
     echo "<div style='text-align: center; margin: 30px 0;'>";
     echo "<h3>🎉 ¡Instalación Completada!</h3>";
@@ -152,7 +163,7 @@ try {
     echo "<h4 style='color: #1976d2; margin-top: 0;'>📋 Credenciales de Administrador:</h4>";
     echo "<ul style='color: #1976d2;'>";
     echo "<li><strong>Usuario:</strong> BioTRaX</li>";
-    echo "<li><strong>Contraseña:</strong> Bio4256</li>";
+    echo "<li><strong>Contrase\u00f1a:</strong> " . htmlspecialchars($adminPassword) . "</li>";
     echo "<li><strong>Rol:</strong> Administrador completo</li>";
     echo "</ul>";
     echo "<p style='color: #666; font-size: 0.9rem;'><em>Puedes cambiar estas credenciales desde el panel de administración.</em></p>";

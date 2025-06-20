@@ -1,13 +1,9 @@
 <?php
-/*
+
 # Nombre: update_admin.php
 # Ubicación: config/update_admin.php
-# Descripción: Actualiza las credenciales del usuario administrador
-*/
-/**
- * Script para actualizar credenciales de administrador
- * Ejecutar si ya tienes la BD instalada y solo quieres cambiar las credenciales
- */
+# Descripción: Actualiza o crea el usuario administrador con nueva contraseña.
+
 
 echo "<!DOCTYPE html>
 <html lang='es'>
@@ -34,6 +30,21 @@ echo "<!DOCTYPE html>
             <p>Actualizar Credenciales de Administrador</p>
         </div>";
 
+$newPassword = getenv('ADMIN_PASSWORD');
+if (!$newPassword) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['new_password'])) {
+        $newPassword = $_POST['new_password'];
+    } else {
+        echo "<form method='POST' style='text-align:center; margin:20px;'>";
+        echo "<label>Nueva contrase\u00f1a de administrador:</label>";
+        echo "<input type='password' name='new_password' required style='margin-left:10px;'>";
+        echo "<button type='submit' class='btn btn-primary'>Actualizar</button>";
+        echo "</form>";
+        echo "</div></body></html>";
+        exit;
+    }
+}
+
 try {
     // Conectar a la base de datos
     $pdo = new PDO(
@@ -49,7 +60,6 @@ try {
     
     // Nuevas credenciales
     $newUsername = 'BioTRaX';
-    $newPassword = 'Bio4256';
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
     
     // Verificar si ya existe el usuario BioTRaX
@@ -88,7 +98,7 @@ try {
     echo "<h4 style='color: #1976d2; margin-top: 0;'>📋 Nuevas Credenciales:</h4>";
     echo "<ul style='color: #1976d2; text-align: left;'>";
     echo "<li><strong>Usuario:</strong> {$newUsername}</li>";
-    echo "<li><strong>Contraseña:</strong> {$newPassword}</li>";
+    echo "<li><strong>Contrase\u00f1a:</strong> " . htmlspecialchars($newPassword) . "</li>";
     echo "<li><strong>Rol:</strong> Administrador completo</li>";
     echo "</ul>";
     echo "</div>";
