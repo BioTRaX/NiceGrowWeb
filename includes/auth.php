@@ -19,91 +19,72 @@ function startSession() {
         session_start();
     }
 }
+/**
+ * Registrar un nuevo usuario
+ * @param string $username Nombre de usuario
+ * @param string $password Contrase\xC3\xB1a en texto plano
+ * @param int $role_id Rol asignado
+ * @return mixed True en \xC3\xA9xito o mensaje de error
+ */
+function register($username, $password, $role_id) {
+    try {
+        $db = getDB();
+        $stmt = $db->prepare('SELECT id FROM users WHERE username = ?');
+        $stmt->execute([$username]);
+        if ($stmt->fetch()) {
+            return 'El usuario ya existe';
+        }
+        $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
+        $stmt = $db->prepare('INSERT INTO users (username, password, role_id) VALUES (?, ?, ?)');
+        $stmt->execute([$username, $hash, $role_id]);
+        return true;
+    } catch (PDOException $e) {
+        return 'Error al registrar: ' . $e->getMessage();
+    }
+}
 
 /**
- * Función de login
- * @param string $username Usuario
- * @param string $password Contraseña
- * @return bool True si login exitoso, false si falla
+ * Iniciar sesi\xC3\xB3n de usuario
+ * @param string $username Nombre de usuario
+ * @param string $password Contrase\xC3\xB1a
+ * @return bool \xC3\x89xito o fallo
  */
 function login($username, $password) {
     try {
         $db = getDB();
-        
-        $stmt = $db->prepare("
-            SELECT u.id, u.username, u.password, u.role_id, r.name as role_name 
-            FROM users u 
-            JOIN roles r ON u.role_id = r.id 
-            WHERE u.username = ? AND u.active = 1
-        ");
-        
+        $stmt = $db->prepare('SELECT id, password, role_id FROM users WHERE username = ?');
         $stmt->execute([$username]);
         $user = $stmt->fetch();
-          if ($user && password_verify($password, $user['password'])) {
-            // Iniciar sesión
+        if ($user && password_verify($password, $user["password"])) {
             startSession();
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
             $_SESSION['role_id'] = $user['role_id'];
-            $_SESSION['role_name'] = $user['role_name'];
-            $_SESSION['login_time'] = time();
-            
-            // Log del login (opcional)
-            logAccess($user['id'], 'login', 'Successful login');
-            
             return true;
         }
-        
         return false;
-        
     } catch (PDOException $e) {
-        error_log("Error en login: " . $e->getMessage());
+        error_log('Error en login: ' . $e->getMessage());
         return false;
     }
 }
 
 /**
- * Middleware de autorización por roles
- * @param array $allowedRoles Array de role_ids permitidos
- * @param string $redirectUrl URL de redirección si no autorizado
+ * Verificar sesión y roles permitidos
+ * @param array $roles Roles autorizados
  */
-function requireRole($allowedRoles = [], $redirectUrl = '/admin/login.php') {
+function requireRole(array $roles) {
     startSession();
-    
-    // Verificar si hay sesión activa
-    if (!isset($_SESSION['user_id']) || !isset($_SESSION['role_id'])) {
-        header("Location: " . $redirectUrl);
+    if (empty($_SESSION['user_id'])) {
+        header('Location: /admin/login.php');
         exit;
     }
-    
-    // Verificar timeout de sesión (24 horas)
-    if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > 86400) {
-        logout();
-        header("Location: " . $redirectUrl . "?timeout=1");
-        exit;
-    }
-    
-    // Si no se especifican roles, solo verificar que esté logueado
-    if (empty($allowedRoles)) {
-        return true;
-    }
-    
-    // Verificar rol
-    if (!in_array($_SESSION['role_id'], $allowedRoles)) {
+    if (!empty($roles) && !in_array($_SESSION['role_id'], $roles)) {
         http_response_code(403);
-        die("
-        <div style='text-align:center; padding:50px; font-family:Arial,sans-serif;'>
-            <h1>🚫 Acceso Denegado</h1>
-            <p>No tienes permisos para acceder a esta sección.</p>
-            <p>Tu rol: <strong>" . htmlspecialchars($_SESSION['role_name']) . "</strong></p>
-            <a href='/admin/dashboard.php'>← Volver al Dashboard</a>
-        </div>
-        ");
+        echo '403 Forbidden';
+        exit;
     }
-    
-    return true;
 }
-
 /**
  * Cerrar sesión
  */
