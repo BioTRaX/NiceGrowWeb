@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: users.php
+# Ubicación: admin/users.php
+# Descripción: Administración de usuarios y asignación de roles
+*/
 require_once '../includes/auth.php';
 
 // Solo administradores pueden gestionar usuarios

@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: update_admin.php
+# Ubicación: config/update_admin.php
+# Descripción: Actualiza las credenciales del usuario administrador
+*/
 /**
  * Script para actualizar credenciales de administrador
  * Ejecutar si ya tienes la BD instalada y solo quieres cambiar las credenciales

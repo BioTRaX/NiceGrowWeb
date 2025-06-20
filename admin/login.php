@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: login.php
+# Ubicación: admin/login.php
+# Descripción: Formulario y proceso de inicio de sesión para administradores
+*/
 require_once '../includes/auth.php';
 
 // Si ya está logueado, redirigir al dashboard

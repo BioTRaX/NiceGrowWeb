@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: upload.php
+# Ubicación: includes/upload.php
+# Descripción: Utilidades para subir y validar archivos de imagen
+*/
 /**
  * Funciones para manejo de archivos e imágenes
  * NiceGrowWeb - Sistema de gestión
