@@ -33,6 +33,26 @@ body {
             color: #333;
             font-weight: 600;
         }
+
+/* Botones genéricos */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+}
+.btn-light {
+    background: #ffffff;
+    color: #6A1B9A;
+}
+.btn-light:hover {
+    background: #f0f0f0;
+    color: #6A1B9A;
+}
+.btn-lg {
+    font-size: 1.25rem;
+}
         .hero {
             background: linear-gradient(135deg, #6A1B9A, #388E3C);
             color: white;
@@ -126,6 +146,25 @@ body {
             background: #4A148C;
             color: white;
             text-decoration: none;
+        }
+
+        /* Navegación de categorías */
+        .categorias {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .categorias a {
+            text-decoration: none;
+            color: #6A1B9A;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        .categorias a.active {
+            background: #6A1B9A;
+            color: #fff;
         }
 
         /* Mejoras responsivas */
