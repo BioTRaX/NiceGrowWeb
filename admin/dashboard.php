@@ -7,7 +7,7 @@
 require_once '../includes/auth.php';
 
 // Requiere estar logueado (cualquier rol)
-requireRole();
+requireRole([1,2]);
 
 $user = getCurrentUser();
 
@@ -265,7 +265,7 @@ try {
                 </a>
             </li>
             <li class="nav-item mt-3">
-                <a class="nav-link btn-logout" href="login.php?logout=1">
+                <a class="nav-link btn-logout" href="logout.php">
                     <i class="fas fa-sign-out-alt me-2"></i>
                     Cerrar Sesión
                 </a>
