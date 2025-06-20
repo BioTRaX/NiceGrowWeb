@@ -78,41 +78,17 @@ try {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
 <?php include __DIR__ . '/includes/header.php'; ?>
-<div class="container mt-4">
-    <?php if ($added): ?>
-        <div class="alert alert-success">Producto a\xC3\xB1adido</div>
-    <?php endif; ?>
-    <div class="row">
-        <?php foreach ($productos as $p): ?>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <?php if (!empty($p['img'])): ?>
-                        <img src="assets/img/products/<?= htmlspecialchars($p['img']) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['name']) ?>">
-                    <?php endif; ?>
-                    <div class="card-body">
-                        <h5 class="card-title"><?= htmlspecialchars($p['name']) ?></h5>
-                        <p class="card-text">$<?= number_format($p['price'], 2) ?></p>
-                        <a href="shop.php?agregar=<?= $p['id'] ?>" class="btn btn-primary">Agregar</a>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
 <div class="container py-4">
+    <?php if ($added): ?>
+        <div class="alert alert-success">Producto añadido</div>
+    <?php endif; ?>
     <form class="row g-3 mb-4" method="get">
         <div class="col-md-4">
             <select name="cat" class="form-select" onchange="this.form.submit()">

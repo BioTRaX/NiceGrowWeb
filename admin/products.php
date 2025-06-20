@@ -600,7 +600,7 @@ if (isset($_GET['success'])) {
                                 
                                 <div class="mb-3">
                                     <label for="category_id" class="form-label">Categoría *</label>
-                                    <select class="form-select" id="category_id" name="category_id" required>
+                                    <select class="form-select" id="category_id" name="category_id" <?= empty($categories) ? '' : 'required' ?> <?= empty($categories) ? 'disabled' : '' ?>>
                                         <option value="">Seleccionar categoría...</option>
                                         <?php foreach ($categories as $cat): ?>
                                             <option value="<?= $cat['id'] ?>" <?= ($old['category_id'] == $cat['id'] || (isset($editProduct['category_id']) && $editProduct['category_id'] == $cat['id'])) ? 'selected' : '' ?>>
@@ -608,6 +608,9 @@ if (isset($_GET['success'])) {
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <?php if (empty($categories)): ?>
+                                        <div class="form-text text-danger">No hay categorías disponibles.</div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             
