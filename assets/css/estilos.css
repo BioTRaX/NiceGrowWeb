@@ -77,3 +77,72 @@ body {
             font-size: 0.9rem;
             margin-top: 2rem;
         }
+        
+        /* Estilos adicionales para productos con imágenes y nueva funcionalidad */
+        .producto .descripcion {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .producto .precio {
+            font-weight: bold;
+            color: #388E3C;
+            font-size: 1.1rem;
+        }
+
+        .producto .stock {
+            font-size: 0.8rem;
+            color: #999;
+            margin: 0.5rem 0;
+        }
+
+        .producto img {
+            transition: transform 0.3s ease;
+        }
+
+        .producto:hover img {
+            transform: scale(1.02);
+        }
+
+        .btn-agregar {
+            display: inline-block;
+            margin-top: 0.5rem;
+            text-decoration: none;
+            background: #6A1B9A;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-agregar:hover {
+            background: #4A148C;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Mejoras responsivas */
+        @media (max-width: 768px) {
+            .productos {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            nav {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
