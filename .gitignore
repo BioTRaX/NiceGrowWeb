@@ -11,4 +11,12 @@ vendor/
 # IDEs
 .vscode/
 .idea/
-.env
+/.env
+
+# Archivos y directorios sensibles
+config/db.php
+backups/
+*.sql
+*.zip
+*.tar
+*.bak
