@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: login.php
+# Ubicación: admin/login.php
+# Descripción: Formulario y proceso de inicio de sesión para administradores
+*/
 require_once '../includes/auth.php';
 
 // Si ya está logueado, redirigir al dashboard
@@ -162,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endif; ?>
                 
-                <form method="POST" action="">
+                <form method="POST" action="login.php">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="username" name="username" 
                                placeholder="Usuario" required autocomplete="username">

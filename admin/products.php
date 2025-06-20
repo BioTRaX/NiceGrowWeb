@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: products.php
+# Ubicación: admin/products.php
+# Descripción: Gestión de productos para administradores y vendedores
+*/
 require_once '../includes/auth.php';
 require_once '../includes/upload.php';
 
@@ -349,7 +354,7 @@ if (isset($_GET['success'])) {
                 </a>
             </li>
             <li class="nav-item mt-3">
-                <a class="nav-link btn-logout" href="login.php?logout=1">
+                <a class="nav-link btn-logout" href="logout.php">
                     <i class="fas fa-sign-out-alt me-2"></i>
                     Cerrar Sesión
                 </a>

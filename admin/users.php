@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: users.php
+# Ubicación: admin/users.php
+# Descripción: Administración de usuarios y asignación de roles
+*/
 require_once '../includes/auth.php';
 
 // Solo administradores pueden gestionar usuarios
@@ -339,7 +344,7 @@ if (isset($_GET['success'])) {
                 </a>
             </li>
             <li class="nav-item mt-3">
-                <a class="nav-link btn-logout" href="login.php?logout=1">
+                <a class="nav-link btn-logout" href="logout.php">
                     <i class="fas fa-sign-out-alt me-2"></i>
                     Cerrar Sesión
                 </a>

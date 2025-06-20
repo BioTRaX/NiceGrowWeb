@@ -28,13 +28,16 @@ Sistema de gestión y tienda online para productos de cultivo con panel administ
 ### 2. Configuración
 1. Clona o descarga el proyecto en `c:\xampp\htdocs\NiceGrowWeb`
 2. Inicia Apache y MySQL desde XAMPP
-3. Ejecuta la instalación de BD: `http://localhost/NiceGrowWeb/config/install.php`
+3. Ejecuta la instalación de BD abriendo `http://localhost/NiceGrowWeb/config/install.php`. El instalador solicitará una contraseña para el usuario administrador. También puedes definirla previamente con la variable de entorno `ADMIN_PASSWORD`.
 4. Accede a la tienda: `http://localhost/NiceGrowWeb/`
+3. Define las variables de entorno `DB_HOST`, `DB_NAME`, `DB_USER` y `DB_PASS` antes de ejecutar la aplicación. Si no se definen se usarán los valores por defecto (`localhost`, `nicegrow_db`, `root`, "").
+4. Ejecuta la instalación de BD: `http://localhost/NiceGrowWeb/config/install.php`
+5. Accede a la tienda: `http://localhost/NiceGrowWeb/`
 
 ### 3. Panel Administrativo
 - URL: `http://localhost/NiceGrowWeb/admin/login.php`
-- Usuario por defecto: `admin`
-- Contraseña por defecto: `admin123`
+- Usuario por defecto: `BioTRaX`
+- Contraseña: la que definiste durante la instalación
 
 ## 📁 Estructura del Proyecto
 
@@ -133,7 +136,7 @@ deleteImage($fileName)
 
 ### Error de conexión a BD
 - Verificar que MySQL esté corriendo
-- Revisar credenciales en `config/db.php`
+- Revisar que las variables de entorno de la base de datos estén definidas o modifícalas en `config/db.php`
 
 ### Imágenes no se suben
 - Verificar permisos de escritura en `/assets/img/products/`
