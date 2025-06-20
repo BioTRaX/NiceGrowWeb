@@ -1,5 +1,9 @@
 <?php
-// archivo: index.php
+/*
+# Nombre: index.php
+# Ubicación: index.php
+# Descripción: Página principal que muestra productos y gestiona el carrito
+*/
 session_start();
 require_once 'config/db.php';
 

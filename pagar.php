@@ -1,5 +1,9 @@
 <?php
-// archivo: pagar.php
+/*
+# Nombre: pagar.php
+# Ubicación: pagar.php
+# Descripción: Muestra la confirmación del pago simulado y limpia el carrito
+*/
 // En un entorno real, aquí se integraría la API de Mercado Pago
 // Para este ejemplo solo se mostrará un mensaje de confirmación.
 
