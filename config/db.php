@@ -1,14 +1,17 @@
 <?php
-/**
- * Configuración de base de datos centralizada
- * NiceGrowWeb - Sistema de gestión de productos
- */
+/*
+# Nombre: db.php
+# Ubicación: config/db.php
+# Descripción: Configuración de base de datos mediante variables de entorno
+*/
 
 // Configuración de base de datos
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'nicegrow_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Las constantes obtienen su valor desde variables de entorno
+// y utilizan un valor predeterminado si no están definidas
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'nicegrow_db');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
 
 class Database {
     private static $instance = null;

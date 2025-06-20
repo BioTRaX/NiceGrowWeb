@@ -1,7 +1,9 @@
 <?php
+
 # Nombre: install.php
 # Ubicación: config/install.php
 # Descripción: Instalador que crea la base de datos y el usuario administrador.
+
 
 
 echo "<!DOCTYPE html>

@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: dashboard.php
+# Ubicación: admin/dashboard.php
+# Descripción: Panel de control con estadísticas generales
+*/
 require_once '../includes/auth.php';
 
 // Requiere estar logueado (cualquier rol)

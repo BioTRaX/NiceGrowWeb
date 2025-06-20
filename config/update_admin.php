@@ -1,7 +1,9 @@
 <?php
+
 # Nombre: update_admin.php
 # Ubicación: config/update_admin.php
 # Descripción: Actualiza o crea el usuario administrador con nueva contraseña.
+
 
 echo "<!DOCTYPE html>
 <html lang='es'>
