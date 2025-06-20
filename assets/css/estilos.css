@@ -1,7 +1,7 @@
 /*
 # Nombre: estilos.css
 # Ubicación: assets/css/estilos.css
-# Descripción: Estilos principales para la interfaz de la tienda
+# Descripción: Estilos principales para la interfaz de la tienda y el modo oscuro
 */
 /* Estilos base de la tienda */
 body {
@@ -215,4 +215,42 @@ body {
     padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
+}
+
+/* Botón para cambiar el modo de color */
+.modo-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #6A1B9A;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Modo oscuro por defecto */
+body.dark {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark header {
+    background-color: #1e1e1e;
+}
+
+body.dark .producto,
+body.dark .carrito {
+    background: #1f1f1f;
+}
+
+body.dark footer {
+    background: #2c2c2c;
+}
+
+body.dark nav a {
+    color: #ddd;
 }
