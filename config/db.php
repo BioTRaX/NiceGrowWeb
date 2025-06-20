@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: db.php
+# Ubicación: config/db.php
+# Descripción: Conexión y gestión de la base de datos principal
+*/
 /**
  * Configuración de base de datos centralizada
  * NiceGrowWeb - Sistema de gestión de productos

@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: auth.php
+# Ubicación: includes/auth.php
+# Descripción: Funciones de autenticación y manejo de sesiones
+*/
 /**
  * Funciones de autenticación y autorización
  * NiceGrowWeb - Sistema de gestión

@@ -1,4 +1,9 @@
 <?php
+/*
+# Nombre: install.php
+# Ubicación: config/install.php
+# Descripción: Instalador inicial de la base de datos y tablas
+*/
 /**
  * Script de instalación de base de datos
  * Ejecutar una sola vez para crear las tablas
