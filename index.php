@@ -156,6 +156,5 @@ function total_carrito($productos, $carrito) {
     <footer>
         © <?= date('Y') ?> Nice Grow. Todos los derechos reservados.
     </footer>
-    <script src="assets/js/funciones.js"></script>
 </body>
 </html>
