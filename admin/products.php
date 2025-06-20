@@ -35,6 +35,10 @@ try {
     
     $products = $stmt->fetchAll();
     
+    // Obtener categorías
+    $stmt = $db->query("SELECT id, name FROM categories ORDER BY name");
+    $categories = $stmt->fetchAll();
+    
 } catch (PDOException $e) {
     $error = "Error al cargar productos: " . $e->getMessage();
 }
@@ -49,75 +53,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Token CSRF inválido');
         }
         
+        // Campos del formulario
+        $name = trim($_POST['name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $price = floatval($_POST['price'] ?? 0);
+        $stock = intval($_POST['stock'] ?? 0);
+        $categoryId = intval($_POST['category_id'] ?? 0);
+        $productId = intval($_POST['product_id'] ?? 0);
+        
+        if (empty($name) || $price <= 0) {
+            throw new Exception('Nombre y precio son obligatorios');
+        }
+        
+        // Manejar imagen
+        $imageName = null;
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $imageName = handleUpload($_FILES['image']);
+        }
+        
         switch ($action) {
             case 'create':
+                // Crear producto con categoría
+                $stmt = $db->prepare("
+                    INSERT INTO products (name, description, price, stock, img, user_id, category_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ");
+                $stmt->execute([$name, $description, $price, $stock, $imageName, $user['id'], $categoryId]);
+                $success = 'Producto creado exitosamente';
+                break;
+
             case 'update':
-                $name = trim($_POST['name'] ?? '');
-                $description = trim($_POST['description'] ?? '');
-                $price = floatval($_POST['price'] ?? 0);
-                $stock = intval($_POST['stock'] ?? 0);
-                $productId = intval($_POST['product_id'] ?? 0);
-                
-                if (empty($name) || $price <= 0) {
-                    throw new Exception('Nombre y precio son obligatorios');
+                // Actualizar producto
+                // Verificar permisos
+                if ($user['role_id'] == 2) {
+                    $stmt = $db->prepare("SELECT user_id FROM products WHERE id = ?");
+                    $stmt->execute([$productId]);
+                    $product = $stmt->fetch();
+                    
+                    if (!$product || $product['user_id'] != $user['id']) {
+                        throw new Exception('No tienes permisos para editar este producto');
+                    }
                 }
                 
-                // Manejar imagen
-                $imageName = null;
-                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                    $imageName = handleUpload($_FILES['image']);
-                }
-                
-                if ($action === 'create') {
-                    // Crear producto
+                if ($imageName) {
+                    // Eliminar imagen anterior si existe
+                    $stmt = $db->prepare("SELECT img FROM products WHERE id = ?");
+                    $stmt->execute([$productId]);
+                    $oldProduct = $stmt->fetch();
+                    if ($oldProduct && $oldProduct['img']) {
+                        deleteImage($oldProduct['img']);
+                    }
+                    
+                    // Actualizar con nueva imagen y categoría
                     $stmt = $db->prepare("
-                        INSERT INTO products (name, description, price, stock, img, user_id) 
-                        VALUES (?, ?, ?, ?, ?, ?)
+                        UPDATE products 
+                        SET name = ?, description = ?, price = ?, stock = ?, img = ?, category_id = ?, updated_at = CURRENT_TIMESTAMP 
+                        WHERE id = ?
                     ");
-                    $stmt->execute([
-                        $name, $description, $price, $stock, $imageName, $user['id']
-                    ]);
-                    $success = 'Producto creado exitosamente';
-                    
+                    $stmt->execute([$name, $description, $price, $stock, $imageName, $categoryId, $productId]);
                 } else {
-                    // Actualizar producto
-                    // Verificar permisos
-                    if ($user['role_id'] == 2) {
-                        $stmt = $db->prepare("SELECT user_id FROM products WHERE id = ?");
-                        $stmt->execute([$productId]);
-                        $product = $stmt->fetch();
-                        
-                        if (!$product || $product['user_id'] != $user['id']) {
-                            throw new Exception('No tienes permisos para editar este producto');
-                        }
-                    }
-                    
-                    if ($imageName) {
-                        // Eliminar imagen anterior si existe
-                        $stmt = $db->prepare("SELECT img FROM products WHERE id = ?");
-                        $stmt->execute([$productId]);
-                        $oldProduct = $stmt->fetch();
-                        if ($oldProduct && $oldProduct['img']) {
-                            deleteImage($oldProduct['img']);
-                        }
-                        
-                        $stmt = $db->prepare("
-                            UPDATE products 
-                            SET name = ?, description = ?, price = ?, stock = ?, img = ?, updated_at = CURRENT_TIMESTAMP 
-                            WHERE id = ?
-                        ");
-                        $stmt->execute([$name, $description, $price, $stock, $imageName, $productId]);
-                    } else {
-                        $stmt = $db->prepare("
-                            UPDATE products 
-                            SET name = ?, description = ?, price = ?, stock = ?, updated_at = CURRENT_TIMESTAMP 
-                            WHERE id = ?
-                        ");
-                        $stmt->execute([$name, $description, $price, $stock, $productId]);
-                    }
-                    
-                    $success = 'Producto actualizado exitosamente';
+                    // Actualizar sin cambiar imagen, pero sí categoría
+                    $stmt = $db->prepare("
+                        UPDATE products 
+                        SET name = ?, description = ?, price = ?, stock = ?, category_id = ?, updated_at = CURRENT_TIMESTAMP 
+                        WHERE id = ?
+                    ");
+                    $stmt->execute([$name, $description, $price, $stock, $categoryId, $productId]);
                 }
+                
+                $success = 'Producto actualizado exitosamente';
                 break;
                 
             case 'delete':
@@ -520,6 +524,18 @@ if (isset($_GET['success'])) {
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <div class="mb-3">
+                                    <label for="category_id" class="form-label">Categoría *</label>
+                                    <select class="form-select" id="category_id" name="category_id" required>
+                                        <option value="">Seleccionar categoría...</option>
+                                        <?php foreach ($categories as $cat): ?>
+                                            <option value="<?= $cat['id'] ?>" <?= (isset($editProduct['category_id']) && $editProduct['category_id']==$cat['id']) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($cat['name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
                             
                             <div class="col-md-4">
@@ -607,6 +623,7 @@ if (isset($_GET['success'])) {
             document.getElementById('description').value = product.description || '';
             document.getElementById('price').value = product.price;
             document.getElementById('stock').value = product.stock;
+            document.getElementById('category_id').value = product.category_id || '';
             
             document.getElementById('productModalTitle').innerHTML = 
                 '<i class="fas fa-edit me-2"></i>Editar Producto';
