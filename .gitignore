@@ -12,3 +12,4 @@ vendor/
 .vscode/
 .idea/
 .env
+config/db.php
