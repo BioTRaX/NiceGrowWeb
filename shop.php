@@ -27,7 +27,7 @@ if (isset($_GET['agregar'])) {
 
 $added = isset($_GET['added']);
 
-*/
+
 session_start();
 require_once __DIR__ . '/config/db.php';
 
