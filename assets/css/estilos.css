@@ -151,3 +151,29 @@ body {
                 font-size: 2rem;
             }
         }
+
+/* Formulario de contacto */
+.form-contacto {
+    max-width: 400px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-contacto input,
+.form-contacto textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-contacto button {
+    background: #388E3C;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
