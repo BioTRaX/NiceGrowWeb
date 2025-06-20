@@ -25,24 +25,8 @@ if (isset($_GET['agregar'])) {
     exit;
 }
 
+
 $added = isset($_GET['added']);
-
-
-session_start();
-require_once __DIR__ . '/config/db.php';
-
-// Inicializar carrito
-if (!isset($_SESSION['carrito'])) {
-    $_SESSION['carrito'] = [];
-}
-
-// Agregar al carrito
-if (isset($_GET['agregar'])) {
-    $id = (int)$_GET['agregar'];
-    $_SESSION['carrito'][$id] = ($_SESSION['carrito'][$id] ?? 0) + 1;
-    header('Location: shop.php');
-    exit;
-}
 
 // Obtener filtros desde GET
 $cat = $_GET['cat'] ?? 'all';

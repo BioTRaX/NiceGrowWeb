@@ -7,10 +7,33 @@
 session_start();
 require_once 'config/db.php';
 
-// Obtener productos desde la base de datos
+$icons = [
+    'genetica-cultivo' => '🧬',
+    'kits-cultivo' => '📦',
+    'sustratos-insumos' => '🪴',
+];
+
+$cat = $_GET['cat'] ?? '';
+
+// Obtener productos y categorías desde la base de datos
 try {
     $db = getDB();
-    $stmt = $db->query("SELECT * FROM products WHERE active = 1 ORDER BY created_at DESC");
+    $catStmt = $db->query("SELECT id, name, slug FROM categories ORDER BY name");
+    $categorias = $catStmt->fetchAll();
+
+    $sql = "SELECT p.* FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.active = 1";
+    $params = [];
+    if ($cat !== '') {
+        $sql .= " AND c.slug = :slug";
+        $params['slug'] = $cat;
+    }
+    $sql .= " ORDER BY p.created_at DESC";
+
+    $stmt = $db->prepare($sql);
+    foreach ($params as $k => $v) {
+        $stmt->bindValue(':' . $k, $v);
+    }
+    $stmt->execute();
     $productosDB = $stmt->fetchAll();
     
     // Formatear productos para compatibilidad con el código existente
@@ -31,6 +54,7 @@ try {
         2 => ["nombre" => "Kit de Cultivo", "precio" => 5800],
         3 => ["nombre" => "Sustrato estéril", "precio" => 2200],
     ];
+    $categorias = [];
 }
 
 // Inicializar carrito si no existe
@@ -82,6 +106,16 @@ function total_carrito($productos, $carrito) {
         <p>Insumos premium para tu cultivo de hongos y plantas</p>
         <a href="/NiceGrowWeb/shop.php" class="btn btn-light btn-lg" role="button" aria-label="Ir a la tienda">Ir a la tienda</a>
     </section>
+
+    <nav class="categorias">
+        <a href="index.php" class="<?= $cat === '' ? 'active' : '' ?>">Todos</a>
+        <?php foreach ($categorias as $c): ?>
+            <a href="?cat=<?= htmlspecialchars($c['slug']) ?>" class="<?= $cat === $c['slug'] ? 'active' : '' ?>">
+                <?= $icons[$c['slug']] ?? '' ?> <?= htmlspecialchars($c['name']) ?>
+            </a>
+        <?php endforeach; ?>
+    </nav>
+
     <section class="productos">
         <?php foreach ($productos as $id => $producto): ?>
             <div class="producto">
