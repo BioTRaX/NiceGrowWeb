@@ -7,9 +7,9 @@
 // En un entorno real, aquí se integraría la API de Mercado Pago
 // Para este ejemplo solo se mostrará un mensaje de confirmación.
 
-session_start();
+require_once __DIR__ . '/includes/cart.php';
 // Vaciar el carrito después del pago simulado
-$_SESSION['carrito'] = [];
+$_SESSION['cart'] = [];
 ?>
 <!DOCTYPE html>
 <html lang="es">
