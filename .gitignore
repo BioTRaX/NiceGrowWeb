@@ -13,3 +13,12 @@ vendor/
 .idea/
 .env
 config/db.php
+/.env
+
+# Archivos y directorios sensibles
+config/db.php
+backups/
+*.sql
+*.zip
+*.tar
+*.bak

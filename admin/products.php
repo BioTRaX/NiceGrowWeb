@@ -6,13 +6,21 @@
 */
 require_once '../includes/auth.php';
 require_once '../includes/upload.php';
+require_once '../includes/validators.php';
 
 // Verificar permisos (admin y seller pueden gestionar productos)
 requireRole([1, 2]); // admin y seller
 
 $user = getCurrentUser();
-$error = '';
+$errors = [];
 $success = '';
+$old = [
+    'name' => '',
+    'description' => '',
+    'price' => '',
+    'stock' => '',
+    'category_id' => ''
+];
 
 // Obtener productos
 try {
@@ -45,38 +53,76 @@ try {
     $categories = $stmt->fetchAll();
     
 } catch (PDOException $e) {
-    $error = "Error al cargar productos: " . $e->getMessage();
+    $errors[] = "Error al cargar productos: " . $e->getMessage();
 }
 
 // Procesar acciones
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $action = $_POST['action'] ?? '';
-        
+
         // Verificar token CSRF
         if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
-            throw new Exception('Token CSRF inválido');
+            $errors[] = 'Token CSRF inválido';
         }
-        
-        // Campos del formulario
+
+        // Obtener y validar campos
         $name = trim($_POST['name'] ?? '');
         $description = trim($_POST['description'] ?? '');
-        $price = floatval($_POST['price'] ?? 0);
-        $stock = intval($_POST['stock'] ?? 0);
+        $priceInput = $_POST['price'] ?? '';
+        $stockInput = $_POST['stock'] ?? '';
         $categoryId = intval($_POST['category_id'] ?? 0);
         $productId = intval($_POST['product_id'] ?? 0);
-        
-        if (empty($name) || $price <= 0) {
-            throw new Exception('Nombre y precio son obligatorios');
+
+        $old = [
+            'name' => $name,
+            'description' => $description,
+            'price' => $priceInput,
+            'stock' => $stockInput,
+            'category_id' => $categoryId
+        ];
+
+        if (mb_strlen($name) < 1 || mb_strlen($name) > 255) {
+            $errors[] = 'El nombre debe tener entre 1 y 255 caracteres';
         }
-        
+        $name = htmlspecialchars($name);
+
+        $description = strip_tags($description, '<strong><em><br>');
+
+        $price = filter_var($priceInput, FILTER_VALIDATE_FLOAT);
+        if ($price === false || $price <= 0 || $price > 999999.99) {
+            $errors[] = 'Precio inválido';
+        }
+
+        $stock = 0;
+        if ($stockInput !== '' && $stockInput !== null) {
+            $stockVal = filter_var($stockInput, FILTER_VALIDATE_INT);
+            if ($stockVal === false || $stockVal < 0) {
+                $errors[] = 'Stock inválido';
+            } else {
+                $stock = $stockVal;
+            }
+        }
+
+        // Verificar categoría
+        $stmt = $db->prepare('SELECT id FROM categories WHERE id = ?');
+        $stmt->execute([$categoryId]);
+        if (!$stmt->fetch()) {
+            $errors[] = 'Categoría no válida';
+        }
+
         // Manejar imagen
         $imageName = null;
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $imageName = handleUpload($_FILES['image']);
+        try {
+            if (isset($_FILES['image'])) {
+                $imageName = validateImage($_FILES['image']);
+            }
+        } catch (Exception $e) {
+            $errors[] = $e->getMessage();
         }
-        
-        switch ($action) {
+
+        if (empty($errors)) {
+            switch ($action) {
             case 'create':
                 // Crear producto con categoría
                 $stmt = $db->prepare("
@@ -161,13 +207,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 break;
         }
-        
+
         // Recargar productos después de la acción
         header('Location: products.php?success=' . urlencode($success));
         exit;
-        
+        } else {
+            $editProduct = [
+                'id' => $productId,
+                'name' => $name,
+                'description' => $description,
+                'price' => $priceInput,
+                'stock' => $stockInput,
+                'category_id' => $categoryId,
+                'img' => null,
+                'action' => $action
+            ];
+        }
+
     } catch (Exception $e) {
-        $error = $e->getMessage();
+        $errors[] = $e->getMessage();
     }
 }
 
@@ -184,8 +242,18 @@ if (isset($_GET['edit'])) {
             $stmt->execute([$editId]);
         }
         $editProduct = $stmt->fetch();
+        if ($editProduct) {
+            $old = [
+                'name' => $editProduct['name'],
+                'description' => $editProduct['description'],
+                'price' => $editProduct['price'],
+                'stock' => $editProduct['stock'],
+                'category_id' => $editProduct['category_id']
+            ];
+            $editProduct['action'] = 'update';
+        }
     } catch (PDOException $e) {
-        $error = "Error al cargar producto: " . $e->getMessage();
+        $errors[] = "Error al cargar producto: " . $e->getMessage();
     }
 }
 
@@ -377,13 +445,13 @@ if (isset($_GET['success'])) {
             </div>
         </div>
         
-        <?php if ($error): ?>
+        <?php foreach ($errors as $msg): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                <?= htmlspecialchars($error) ?>
+                <?= htmlspecialchars($msg) ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        <?php endif; ?>
+        <?php endforeach; ?>
         
         <?php if ($success): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -501,12 +569,12 @@ if (isset($_GET['success'])) {
                             <div class="col-md-8">
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Nombre del Producto *</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($old['name']) ?>" required>
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="3"><?= htmlspecialchars($old['description']) ?></textarea>
                                 </div>
                                 
                                 <div class="row">
@@ -515,8 +583,8 @@ if (isset($_GET['success'])) {
                                             <label for="price" class="form-label">Precio *</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">$</span>
-                                                <input type="number" class="form-control" id="price" name="price" 
-                                                       min="0" step="0.01" required>
+                                                <input type="number" class="form-control" id="price" name="price"
+                                                       min="0" step="0.01" value="<?= htmlspecialchars($old['price']) ?>" required>
                                             </div>
                                         </div>
                                     </div>
@@ -524,8 +592,8 @@ if (isset($_GET['success'])) {
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="stock" class="form-label">Stock</label>
-                                            <input type="number" class="form-control" id="stock" name="stock" 
-                                                   min="0" value="0">
+                                            <input type="number" class="form-control" id="stock" name="stock"
+                                                   min="0" value="<?= htmlspecialchars($old['stock']) ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -535,7 +603,7 @@ if (isset($_GET['success'])) {
                                     <select class="form-select" id="category_id" name="category_id" required>
                                         <option value="">Seleccionar categoría...</option>
                                         <?php foreach ($categories as $cat): ?>
-                                            <option value="<?= $cat['id'] ?>" <?= (isset($editProduct['category_id']) && $editProduct['category_id']==$cat['id']) ? 'selected' : '' ?>>
+                                            <option value="<?= $cat['id'] ?>" <?= ($old['category_id'] == $cat['id'] || (isset($editProduct['category_id']) && $editProduct['category_id'] == $cat['id'])) ? 'selected' : '' ?>>
                                                 <?= htmlspecialchars($cat['name']) ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -620,31 +688,42 @@ if (isset($_GET['success'])) {
             }
         });
         
-        // Editar producto
-        function editProduct(product) {
-            document.getElementById('formAction').value = 'update';
-            document.getElementById('productId').value = product.id;
-            document.getElementById('name').value = product.name;
-            document.getElementById('description').value = product.description || '';
-            document.getElementById('price').value = product.price;
-            document.getElementById('stock').value = product.stock;
-            document.getElementById('category_id').value = product.category_id || '';
-            
-            document.getElementById('productModalTitle').innerHTML = 
-                '<i class="fas fa-edit me-2"></i>Editar Producto';
-            document.getElementById('submitBtn').innerHTML = 
-                '<i class="fas fa-save me-2"></i>Actualizar';
-            
-            // Mostrar imagen actual si existe
-            if (product.img) {
+        function openProductForm(data) {
+            document.getElementById('formAction').value = data.action || 'create';
+            document.getElementById('productId').value = data.id || '';
+            document.getElementById('name').value = data.name || '';
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('price').value = data.price || '';
+            document.getElementById('stock').value = data.stock || '';
+            document.getElementById('category_id').value = data.category_id || '';
+
+            if (data.action === 'update') {
+                document.getElementById('productModalTitle').innerHTML =
+                    '<i class="fas fa-edit me-2"></i>Editar Producto';
+                document.getElementById('submitBtn').innerHTML =
+                    '<i class="fas fa-save me-2"></i>Actualizar';
+            } else {
+                document.getElementById('productModalTitle').innerHTML =
+                    '<i class="fas fa-plus me-2"></i>Nuevo Producto';
+                document.getElementById('submitBtn').innerHTML =
+                    '<i class="fas fa-save me-2"></i>Guardar';
+            }
+
+            if (data.img) {
                 const preview = document.getElementById('imagePreview');
                 const img = document.getElementById('previewImg');
-                img.src = '<?= getImageUrl('') ?>' + product.img;
+                img.src = '<?= getImageUrl('') ?>' + data.img;
                 preview.style.display = 'block';
             }
-            
+
             const modal = new bootstrap.Modal(document.getElementById('productModal'));
             modal.show();
+        }
+
+        // Editar producto
+        function editProduct(product) {
+            product.action = 'update';
+            openProductForm(product);
         }
         
         // Eliminar producto
@@ -669,9 +748,9 @@ if (isset($_GET['success'])) {
         });
         
         <?php if ($editProduct): ?>
-        // Auto-abrir modal para editar si viene de URL
+        // Auto-abrir modal con datos previos
         document.addEventListener('DOMContentLoaded', function() {
-            editProduct(<?= json_encode($editProduct) ?>);
+            openProductForm(<?= json_encode($editProduct) ?>);
         });
         <?php endif; ?>
     </script>
