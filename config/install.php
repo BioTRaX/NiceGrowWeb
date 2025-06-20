@@ -146,6 +146,10 @@ try {
             }
         }
     }
+
+    // Crear tabla de categorías y valores iniciales
+    require_once __DIR__ . '/install_categories.php';
+    installCategories($pdo);
     
     echo "<div class='status success'>✅ Tablas creadas correctamente</div>";
     echo "<div class='status success'>✅ Roles insertados: admin, seller, viewer</div>";

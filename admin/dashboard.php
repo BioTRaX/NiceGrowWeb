@@ -252,6 +252,12 @@ try {
             </li>
             <?php if (isAdmin()): ?>
             <li class="nav-item">
+                <a class="nav-link" href="categories.php">
+                    <i class="fas fa-tags me-2"></i>
+                    Categorías
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="users.php">
                     <i class="fas fa-users me-2"></i>
                     Usuarios
