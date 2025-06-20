@@ -2,7 +2,7 @@
 /*
 # Nombre: index.php
 # Ubicación: index.php
-# Descripción: Página principal que muestra productos y gestiona el carrito
+# Descripción: Página principal con catálogo, carrito y sección hero
 */
 session_start();
 require_once 'config/db.php';
@@ -84,10 +84,12 @@ function total_carrito($productos, $carrito) {
         </nav>
     </header>
 
-    <section class="hero">
-        <h2>Cultivá con estilo y conciencia 🌱</h2>
+    <section class="hero container text-center py-5" style="background: linear-gradient(135deg, #6A1B9A, #388E3C);">
+        <h1>Cultivá con estilo y conciencia 🌱</h1>
         <p>Insumos premium para tu cultivo de hongos y plantas</p>
-    </section>    <section class="productos">
+        <a href="/NiceGrowWeb/shop.php" class="btn btn-light btn-lg" role="button" aria-label="Ir a la tienda">Ir a la tienda</a>
+    </section>
+    <section class="productos">
         <?php foreach ($productos as $id => $producto): ?>
             <div class="producto">
                 <?php if (!empty($producto['imagen'])): ?>
