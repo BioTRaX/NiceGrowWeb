@@ -49,37 +49,69 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Categorías</title>
-<link rel="stylesheet" href="../assets/css/estilos.css">
-<link rel="stylesheet" href="../assets/css/admin-dark.css">
+    <title>Categorías</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
-<h1>Categorías</h1>
-<?php foreach ($errors as $msg): ?>
-<p style="color:red"><?= htmlspecialchars($msg) ?></p>
-<?php endforeach; ?>
-<?php if ($success): ?>
-<p style="color:green"><?= htmlspecialchars($success) ?></p>
-<?php endif; ?>
-<form method="POST">
-    <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
-    <label>Nombre:<input type="text" name="name"></label>
-    <label>Slug:<input type="text" name="slug"></label>
-    <button type="submit">Agregar</button>
-</form>
-<table border="1">
-<thead><tr><th>ID</th><th>Nombre</th><th>Slug</th></tr></thead>
-<tbody>
-<?php if ($categories): ?>
-    <?php foreach ($categories as $cat): ?>
-    <tr><td><?= $cat['id'] ?></td><td><?= htmlspecialchars($cat['name']) ?></td><td><?= htmlspecialchars($cat['slug']) ?></td></tr>
+<?php include __DIR__ . '/../includes/header.php'; ?>
+<div class="container py-4">
+    <h1 class="mb-4">Categorías</h1>
+
+    <?php foreach ($errors as $msg): ?>
+        <div class="alert alert-danger">
+            <?= htmlspecialchars($msg) ?>
+        </div>
     <?php endforeach; ?>
-<?php else: ?>
-    <tr><td colspan="3">Sin categorías</td></tr>
+<?php if ($success): ?>
+    <div class="alert alert-success">
+        <?= htmlspecialchars($success) ?>
+    </div>
 <?php endif; ?>
-</tbody>
+
+<form method="POST" class="row g-3 mb-4">
+    <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
+    <div class="col-md-5">
+        <input type="text" name="name" class="form-control" placeholder="Nombre" required>
+    </div>
+    <div class="col-md-5">
+        <input type="text" name="slug" class="form-control" placeholder="Slug" required>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Agregar</button>
+    </div>
+</form>
+
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Slug</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php if ($categories): ?>
+        <?php foreach ($categories as $cat): ?>
+        <tr>
+            <td><?= $cat['id'] ?></td>
+            <td><?= htmlspecialchars($cat['name']) ?></td>
+            <td><?= htmlspecialchars($cat['slug']) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="3" class="text-center">Sin categorías</td>
+        </tr>
+    <?php endif; ?>
+    </tbody>
 </table>
+
 <button id="modoBtn" class="modo-toggle" aria-label="Cambiar modo"></button>
+
+<?php include __DIR__ . '/../includes/footer.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script defer src="../assets/js/funciones.js"></script>
+
 </body>
 </html>
