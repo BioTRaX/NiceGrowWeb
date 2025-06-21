@@ -125,11 +125,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             switch ($action) {
             case 'create':
                 // Crear producto con categoría
-                $stmt = $db->prepare("
-                    INSERT INTO products (name, description, price, stock, img, user_id, category_id) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                ");
-                $stmt->execute([$name, $description, $price, $stock, $imageName, $user['id'], $categoryId]);
+                $stmt = $db->prepare(
+                    "INSERT INTO products (name, description, price, stock, img, user_id, category_id)
+                     VALUES (:name, :description, :price, :stock, :img, :user_id, :category_id)"
+                );
+                $stmt->execute([
+                    ':name' => $name,
+                    ':description' => $description,
+                    ':price' => $price,
+                    ':stock' => $stock,
+                    ':img' => $imageName,
+                    ':user_id' => $user['id'],
+                    ':category_id' => $categoryId,
+                ]);
                 $success = 'Producto creado exitosamente';
                 break;
 
@@ -154,22 +162,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($oldProduct && $oldProduct['img']) {
                         deleteImage($oldProduct['img']);
                     }
-                    
+
                     // Actualizar con nueva imagen y categoría
-                    $stmt = $db->prepare("
-                        UPDATE products 
-                        SET name = ?, description = ?, price = ?, stock = ?, img = ?, category_id = ?, updated_at = CURRENT_TIMESTAMP 
-                        WHERE id = ?
-                    ");
-                    $stmt->execute([$name, $description, $price, $stock, $imageName, $categoryId, $productId]);
+                    $stmt = $db->prepare(
+                        "UPDATE products
+                         SET name = :name, description = :description, price = :price, stock = :stock, img = :img, category_id = :category_id, updated_at = CURRENT_TIMESTAMP
+                         WHERE id = :id"
+                    );
+                    $stmt->execute([
+                        ':name' => $name,
+                        ':description' => $description,
+                        ':price' => $price,
+                        ':stock' => $stock,
+                        ':img' => $imageName,
+                        ':category_id' => $categoryId,
+                        ':id' => $productId,
+                    ]);
                 } else {
                     // Actualizar sin cambiar imagen, pero sí categoría
-                    $stmt = $db->prepare("
-                        UPDATE products 
-                        SET name = ?, description = ?, price = ?, stock = ?, category_id = ?, updated_at = CURRENT_TIMESTAMP 
-                        WHERE id = ?
-                    ");
-                    $stmt->execute([$name, $description, $price, $stock, $categoryId, $productId]);
+                    $stmt = $db->prepare(
+                        "UPDATE products
+                         SET name = :name, description = :description, price = :price, stock = :stock, category_id = :category_id, updated_at = CURRENT_TIMESTAMP
+                         WHERE id = :id"
+                    );
+                    $stmt->execute([
+                        ':name' => $name,
+                        ':description' => $description,
+                        ':price' => $price,
+                        ':stock' => $stock,
+                        ':category_id' => $categoryId,
+                        ':id' => $productId,
+                    ]);
                 }
                 
                 $success = 'Producto actualizado exitosamente';
