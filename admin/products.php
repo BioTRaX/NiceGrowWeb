@@ -275,7 +275,9 @@ if (isset($_GET['success'])) {
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="../assets/css/estilos.css">
+    <link rel="stylesheet" href="../assets/css/admin-dark.css">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -763,5 +765,7 @@ if (isset($_GET['success'])) {
         });
         <?php endif; ?>
     </script>
+    <button id="modoBtn" class="modo-toggle" aria-label="Cambiar modo"></button>
+    <script defer src="../assets/js/funciones.js"></script>
 </body>
 </html>
