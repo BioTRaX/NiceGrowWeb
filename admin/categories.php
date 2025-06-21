@@ -14,6 +14,13 @@ $success = '';
 try {
     $db = getDB();
 
+    // Crear tabla si no existe para evitar errores en instalaciones nuevas
+    $db->exec("CREATE TABLE IF NOT EXISTS categories (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        slug VARCHAR(100) UNIQUE NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
             $errors[] = 'Token CSRF inválido';
@@ -61,9 +68,13 @@ try {
 <table border="1">
 <thead><tr><th>ID</th><th>Nombre</th><th>Slug</th></tr></thead>
 <tbody>
-<?php foreach ($categories as $cat): ?>
-<tr><td><?= $cat['id'] ?></td><td><?= htmlspecialchars($cat['name']) ?></td><td><?= htmlspecialchars($cat['slug']) ?></td></tr>
-<?php endforeach; ?>
+<?php if ($categories): ?>
+    <?php foreach ($categories as $cat): ?>
+    <tr><td><?= $cat['id'] ?></td><td><?= htmlspecialchars($cat['name']) ?></td><td><?= htmlspecialchars($cat['slug']) ?></td></tr>
+    <?php endforeach; ?>
+<?php else: ?>
+    <tr><td colspan="3">Sin categorías</td></tr>
+<?php endif; ?>
 </tbody>
 </table>
 </body>
