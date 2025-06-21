@@ -49,7 +49,9 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categorías</title>
+<title>Categorías</title>
+<link rel="stylesheet" href="../assets/css/estilos.css">
+<link rel="stylesheet" href="../assets/css/admin-dark.css">
 </head>
 <body>
 <h1>Categorías</h1>
@@ -77,5 +79,7 @@ try {
 <?php endif; ?>
 </tbody>
 </table>
+<button id="modoBtn" class="modo-toggle" aria-label="Cambiar modo"></button>
+<script defer src="../assets/js/funciones.js"></script>
 </body>
 </html>
