@@ -55,7 +55,12 @@ function login($username, $password) {
         // Se eliminó var_dump para desactivar el modo depuración
 
         $db = getDB();
-        $stmt = $db->prepare('SELECT id, password, role_id FROM users WHERE username = ?');
+        $stmt = $db->prepare(
+            'SELECT u.id, u.username, u.password, u.role_id, r.name AS role_name
+             FROM users u
+             LEFT JOIN roles r ON u.role_id = r.id
+             WHERE u.username = ?'
+        );
         $stmt->execute([$username]);
         $user = $stmt->fetch();
 
@@ -75,6 +80,8 @@ function login($username, $password) {
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role_id'] = $user['role_id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role_name'] = $user['role_name'] ?? '';
             return true;
         }
         return false;
@@ -137,10 +144,10 @@ function getCurrentUser() {
     }
     
     return [
-        'id' => $_SESSION['user_id'],
-        'username' => $_SESSION['username'],
-        'role_id' => $_SESSION['role_id'],
-        'role_name' => $_SESSION['role_name']
+        'id' => $_SESSION['user_id'] ?? null,
+        'username' => $_SESSION['username'] ?? '',
+        'role_id' => $_SESSION['role_id'] ?? null,
+        'role_name' => $_SESSION['role_name'] ?? ''
     ];
 }
 
