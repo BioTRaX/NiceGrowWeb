@@ -46,11 +46,11 @@ try {
 </head>
 <body>
 <h1>Categorías</h1>
-<?php foreach (\$errors as \$msg): ?>
-<p style="color:red"><?= htmlspecialchars(\$msg) ?></p>
+<?php foreach ($errors as $msg): ?>
+<p style="color:red"><?= htmlspecialchars($msg) ?></p>
 <?php endforeach; ?>
-<?php if (\$success): ?>
-<p style="color:green"><?= htmlspecialchars(\$success) ?></p>
+<?php if ($success): ?>
+<p style="color:green"><?= htmlspecialchars($success) ?></p>
 <?php endif; ?>
 <form method="POST">
     <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
@@ -61,8 +61,8 @@ try {
 <table border="1">
 <thead><tr><th>ID</th><th>Nombre</th><th>Slug</th></tr></thead>
 <tbody>
-<?php foreach (\$categories as \$cat): ?>
-<tr><td><?= \$cat['id'] ?></td><td><?= htmlspecialchars(\$cat['name']) ?></td><td><?= htmlspecialchars(\$cat['slug']) ?></td></tr>
+<?php foreach ($categories as $cat): ?>
+<tr><td><?= $cat['id'] ?></td><td><?= htmlspecialchars($cat['name']) ?></td><td><?= htmlspecialchars($cat['slug']) ?></td></tr>
 <?php endforeach; ?>
 </tbody>
 </table>
