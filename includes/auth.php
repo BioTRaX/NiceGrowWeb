@@ -51,24 +51,24 @@ function register($username, $password, $role_id) {
  */
 function login($username, $password) {
     try {
-        //TODO DEBUG: visualizar el usuario recibido
-        var_dump($username);
+        // Nombre de usuario recibido
+        // Se eliminó var_dump para desactivar el modo depuración
 
         $db = getDB();
         $stmt = $db->prepare('SELECT id, password, role_id FROM users WHERE username = ?');
         $stmt->execute([$username]);
         $user = $stmt->fetch();
 
-        //TODO DEBUG: confirmar fila obtenida de la base de datos
-        var_dump($user);
+        // Resultado de la consulta
+        // Se eliminó var_dump para evitar mostrar datos sensibles
 
         $passwordValid = false;
         if ($user) {
             $passwordValid = password_verify($password, $user["password"]);
         }
 
-        //TODO DEBUG: resultado de password_verify
-        var_dump($passwordValid);
+        // Resultado de password_verify
+        // Se eliminó var_dump para desactivar depuración
 
         if ($user && $passwordValid) {
             startSession();
