@@ -51,11 +51,26 @@ function register($username, $password, $role_id) {
  */
 function login($username, $password) {
     try {
+        //TODO DEBUG: visualizar el usuario recibido
+        var_dump($username);
+
         $db = getDB();
         $stmt = $db->prepare('SELECT id, password, role_id FROM users WHERE username = ?');
         $stmt->execute([$username]);
         $user = $stmt->fetch();
-        if ($user && password_verify($password, $user["password"])) {
+
+        //TODO DEBUG: confirmar fila obtenida de la base de datos
+        var_dump($user);
+
+        $passwordValid = false;
+        if ($user) {
+            $passwordValid = password_verify($password, $user["password"]);
+        }
+
+        //TODO DEBUG: resultado de password_verify
+        var_dump($passwordValid);
+
+        if ($user && $passwordValid) {
             startSession();
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
