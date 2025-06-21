@@ -35,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Por favor, completa todos los campos.';
     } else {
         if (login($username, $password)) {
+            //TODO DEBUG: visualizar mensaje de error previo a la redirección
+            var_dump($error);
             header('Location: dashboard.php');
             exit;
         } else {
