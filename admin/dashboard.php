@@ -290,6 +290,7 @@ try {
           <!-- Statistics Cards -->
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-4">
+                <a href="/admin/products.php" class="text-decoration-none">
                 <div class="stat-card">
                     <div class="stat-content">
                         <h6 class="text-uppercase mb-1">Productos</h6>
@@ -299,9 +300,11 @@ try {
                         <i class="fas fa-box"></i>
                     </div>
                 </div>
+                </a>
             </div>
             
             <div class="col-xl-3 col-md-6 mb-4">
+                <a href="/admin/users.php" class="text-decoration-none">
                 <div class="stat-card success">
                     <div class="stat-content">
                         <h6 class="text-uppercase mb-1">Usuarios</h6>
@@ -311,9 +314,11 @@ try {
                         <i class="fas fa-users"></i>
                     </div>
                 </div>
+                </a>
             </div>
             
             <div class="col-xl-3 col-md-6 mb-4">
+                <a href="/admin/products.php?lowstock=1" class="text-decoration-none">
                 <div class="stat-card warning">
                     <div class="stat-content">
                         <h6 class="text-uppercase mb-1">Stock Bajo</h6>
@@ -323,6 +328,7 @@ try {
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                 </div>
+                </a>
             </div>
             
             <div class="col-xl-3 col-md-6 mb-4">
@@ -364,7 +370,11 @@ try {
                                     <tbody>
                                         <?php foreach ($recentProducts as $product): ?>
                                         <tr>
-                                            <td class="fw-bold"><?= htmlspecialchars($product['name']) ?></td>
+                                            <td class="fw-bold">
+                                                <a href="/admin/products.php?edit=<?= $product['id'] ?>">
+                                                    <?= htmlspecialchars($product['name']) ?>
+                                                </a>
+                                            </td>
                                             <td class="text-success">$<?= number_format($product['price'], 2) ?></td>
                                             <td>
                                                 <span class="badge bg-<?= $product['stock'] > 10 ? 'success' : ($product['stock'] > 0 ? 'warning' : 'danger') ?>">
@@ -428,7 +438,7 @@ try {
                         <ul class="list-unstyled">
                             <li><strong>Usuario:</strong> <?= htmlspecialchars($user['username']) ?></li>
                             <li><strong>Rol:</strong> <?= htmlspecialchars($user['role_name']) ?></li>
-                            <li><strong>Sesión desde:</strong> <?= date('d/m/Y H:i', $_SESSION['login_time']) ?></li>
+                            <li><strong>Sesión desde:</strong> <?= date('d/m/Y H:i', $_SESSION['login_time'] ?? time()) ?></li>
                         </ul>
                     </div>
                 </div>

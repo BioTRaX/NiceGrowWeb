@@ -82,6 +82,8 @@ function login($username, $password) {
             $_SESSION['role_id'] = $user['role_id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role_name'] = $user['role_name'] ?? '';
+            // Registrar la hora de inicio de sesión
+            $_SESSION['login_time'] = time();
             return true;
         }
         return false;

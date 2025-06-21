@@ -25,25 +25,32 @@ $old = [
 // Obtener productos
 try {
     $db = getDB();
-    
-    // Si es seller, solo mostrar sus productos
-    if ($user['role_id'] == 2) {
-        $stmt = $db->prepare("
-            SELECT p.*, u.username as created_by 
-            FROM products p 
-            LEFT JOIN users u ON p.user_id = u.id 
-            WHERE p.user_id = ? 
-            ORDER BY p.created_at DESC
-        ");
-        $stmt->execute([$user['id']]);
+
+    $filterLowStock = isset($_GET["lowstock"]) && $_GET["lowstock"] == "1";
+
+    if ($user["role_id"] == 2) {
+        $sql = "SELECT p.*, u.username as created_by
+                FROM products p
+                LEFT JOIN users u ON p.user_id = u.id
+                WHERE p.user_id = ?";
+        $params = [$user["id"]];
+        if ($filterLowStock) {
+            $sql .= " AND p.stock <= 1";
+        }
+        $sql .= " ORDER BY p.created_at DESC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
     } else {
-        // Admin ve todos los productos
-        $stmt = $db->query("
-            SELECT p.*, u.username as created_by 
-            FROM products p 
-            LEFT JOIN users u ON p.user_id = u.id 
-            ORDER BY p.created_at DESC
-        ");
+        $sql = "SELECT p.*, u.username as created_by
+                FROM products p
+                LEFT JOIN users u ON p.user_id = u.id";
+        $params = [];
+        if ($filterLowStock) {
+            $sql .= " WHERE p.stock <= 1";
+        }
+        $sql .= " ORDER BY p.created_at DESC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
     }
     
     $products = $stmt->fetchAll();
