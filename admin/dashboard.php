@@ -52,7 +52,7 @@ try {
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/estilos.css">
-    <link rel="stylesheet" href="../assets/css/admin-dark.css">
+    <link rel="stylesheet" href="/NiceGrowWeb/assets/css/admin-dark.css">
 
     <style>
         body {
@@ -218,13 +218,13 @@ try {
 </head>
 <body>
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar bg-dark text-white">
         <div class="p-3">
-            <h4 class="text-white mb-0">
+            <h4 class="mb-0">
                 <i class="fas fa-seedling text-success"></i>
-                Nice Grow
+                <span class="brand-text fw-bold text-primary">Nice Grow</span>
             </h4>
-            <small class="text-muted">Panel Admin</small>
+            <small class="text-white-50">Panel Admin</small>
         </div>
         
         <div class="user-info">
@@ -284,14 +284,14 @@ try {
     <!-- Main Content -->
     <main class="main-content">
         <div class="brand-header">
-            <h1 class="h3 mb-0">Dashboard</h1>
-            <p class="text-muted mb-0">Bienvenido al panel de administración</p>
+            <h1 class="h3 mb-0 text-white-50">Dashboard</h1>
+            <p class="text-white-50 mb-0">Bienvenido al panel de administración</p>
         </div>
           <!-- Statistics Cards -->
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-4">
                 <a href="/admin/products.php" class="text-decoration-none">
-                <div class="stat-card">
+                <div class="stat-card bg-dark text-white">
                     <div class="stat-content">
                         <h6 class="text-uppercase mb-1">Productos</h6>
                         <h2 class="mb-0"><?= $totalProducts ?></h2>
@@ -305,7 +305,7 @@ try {
             
             <div class="col-xl-3 col-md-6 mb-4">
                 <a href="/admin/users.php" class="text-decoration-none">
-                <div class="stat-card success">
+                <div class="stat-card success bg-dark text-white">
                     <div class="stat-content">
                         <h6 class="text-uppercase mb-1">Usuarios</h6>
                         <h2 class="mb-0"><?= $totalUsers ?></h2>
@@ -319,7 +319,7 @@ try {
             
             <div class="col-xl-3 col-md-6 mb-4">
                 <a href="/admin/products.php?lowstock=1" class="text-decoration-none">
-                <div class="stat-card warning">
+                <div class="stat-card warning bg-dark text-white">
                     <div class="stat-content">
                         <h6 class="text-uppercase mb-1">Stock Bajo</h6>
                         <h2 class="mb-0">3</h2>
@@ -332,7 +332,7 @@ try {
             </div>
             
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="stat-card info">
+                <div class="stat-card info bg-dark text-white">
                     <div class="stat-content">
                         <h6 class="text-uppercase mb-1">Ventas Hoy</h6>
                         <h2 class="mb-0">$0</h2>
@@ -347,7 +347,7 @@ try {
         <!-- Recent Products -->
         <div class="row">
             <div class="col-lg-8">
-                <div class="card">
+            <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">
                             <i class="fas fa-box me-2"></i>
@@ -357,7 +357,7 @@ try {
                     <div class="card-body">
                         <?php if (!empty($recentProducts)): ?>
                             <div class="table-responsive">
-                                <table class="table table-hover">
+                                <table class="table table-dark table-striped">
                                     <thead class="table-light">
                                         <tr>
                                             <th>Nombre</th>
@@ -405,9 +405,9 @@ try {
             </div>
             
             <div class="col-lg-4">
-                <div class="card">
+                <div class="card border-primary">
                     <div class="card-header">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0 text-primary">
                             <i class="fas fa-info-circle me-2"></i>
                             Acciones Rápidas
                         </h5>
@@ -420,7 +420,7 @@ try {
                             </a>
                             
                             <?php if (isAdmin()): ?>
-                            <a href="users.php" class="btn btn-outline-success">
+                            <a href="users.php" class="btn btn-outline-primary">
                                 <i class="fas fa-user-plus me-2"></i>
                                 Nuevo Usuario
                             </a>

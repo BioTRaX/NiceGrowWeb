@@ -1,38 +1,20 @@
 /*
 # Nombre: admin-dark.css
 # Ubicación: assets/css/admin-dark.css
-# Descripción: Estilos para habilitar el modo oscuro en las páginas del panel
+# Descripción: Variables y estilos para el modo oscuro del panel de administración
 */
 
-body.dark {
-    background-color: #121212;
-    color: #e0e0e0;
+:root {
+    --bs-body-bg:      #141414;
+    --bs-body-color:   #f1f1f1;
+    --bs-primary:      #6A1B9A;
+    --bs-primary-rgb:  106,27,154;
+    --bs-secondary:    #388E3C;
+    --bs-card-bg:      #1e1e1e;
+    --bs-table-bg:     #1e1e1e;
 }
 
-body.dark .sidebar {
-    background: #1e1e1e;
-}
-
-body.dark .main-content {
-    background-color: #121212;
-}
-
-body.dark .card,
-body.dark .stat-card,
-body.dark .brand-header {
-    background: #1f1f1f;
-    color: #e0e0e0;
-}
-
-body.dark .card-header {
-    background-color: #2c2c2c;
-    border-color: #333;
-}
-
-body.dark nav a {
-    color: #cbd5e0;
-}
-
-body.dark .btn-close {
-    filter: invert(1);
+.nav-link.active {
+    background: var(--bs-primary);
+    color: #fff !important;
 }
