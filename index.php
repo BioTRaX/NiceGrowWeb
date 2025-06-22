@@ -122,7 +122,7 @@ function total_carrito($productos, $carrito) {
                 <?php if (!empty($producto['imagen'])): ?>
                     <img src="assets/img/products/<?= htmlspecialchars($producto['imagen']) ?>" 
                          alt="<?= htmlspecialchars($producto['nombre']) ?>"
-                         style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
+                         class="img-cover">
                 <?php endif; ?>
                 <h3><?= htmlspecialchars($producto['nombre']) ?></h3>
                 <?php if (!empty($producto['descripcion'])): ?>

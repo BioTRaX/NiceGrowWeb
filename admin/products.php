@@ -6,7 +6,23 @@
 */
 require_once '../includes/auth.php';
 require_once '../includes/upload.php';
-require_once '../includes/validators.php';
+
+// Migrar categories y columna category_id si no existe
+$db = getDB();
+try {
+    $db->exec("CREATE TABLE IF NOT EXISTS categories (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        slug VARCHAR(100) NOT NULL UNIQUE
+    ) CHARSET=utf8mb4;");
+    $db->exec("ALTER TABLE products ADD COLUMN IF NOT EXISTS category_id INT NULL AFTER user_id;");
+} catch (PDOException $e) {
+    // ignore migration errors
+}
+
+// Obtener categorías para el formulario
+$catStmt = $db->query("SELECT id, name FROM categories ORDER BY name");
+$categories = $catStmt->fetchAll();
 
 // Verificar permisos (admin y seller pueden gestionar productos)
 requireRole([1, 2]); // admin y seller
@@ -529,7 +545,7 @@ if (isset($_GET['success'])) {
                                         <?php if ($product['img']): ?>
                                             <img src="<?= getImageUrl($product['img']) ?>" 
                                                  alt="<?= htmlspecialchars($product['name']) ?>" 
-                                                 class="product-image">
+                                                 class="img-cover">
                                         <?php else: ?>
                                             <div class="product-image bg-light d-flex align-items-center justify-content-center">
                                                 <i class="fas fa-image text-muted"></i>
@@ -636,19 +652,16 @@ if (isset($_GET['success'])) {
                                     </div>
                                 </div>
                                 
-                                <div class="mb-3">
+                                <div class="mb-3 col-md-6">
                                     <label for="category_id" class="form-label">Categoría *</label>
-                                    <select class="form-select" id="category_id" name="category_id" <?= empty($categories) ? '' : 'required' ?> <?= empty($categories) ? 'disabled' : '' ?>>
-                                        <option value="">Seleccionar categoría...</option>
-                                        <?php foreach ($categories as $cat): ?>
-                                            <option value="<?= $cat['id'] ?>" <?= ($old['category_id'] == $cat['id'] || (isset($editProduct['category_id']) && $editProduct['category_id'] == $cat['id'])) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($cat['name']) ?>
+                                    <select class="form-select" id="category_id" name="category_id" required>
+                                        <option value="">Selecciona categoría</option>
+                                        <?php foreach ($categories as $catItem): ?>
+                                            <option value="<?= $catItem['id'] ?>" <?= (isset($editProduct) && $editProduct['category_id']==$catItem['id'])?'selected':''?>>
+                                                <?= htmlspecialchars($catItem['name']) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <?php if (empty($categories)): ?>
-                                        <div class="form-text text-danger">No hay categorías disponibles.</div>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                             

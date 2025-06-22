@@ -178,6 +178,13 @@ try {
             color: #fff;
         }
         
+        .stat-card .display-4 {
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {

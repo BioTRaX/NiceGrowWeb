@@ -74,7 +74,7 @@ body {
             padding: 2rem;
         }
         .producto {
-            background: white;
+            background: #ececec; /* antes era white */
             border-radius: 8px;
             padding: 1rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -257,4 +257,70 @@ body.dark footer {
 
 body.dark nav a {
     color: #ddd;
+}
+
+/* Imagen con formato unificado */
+.img-cover {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Admin specific styles */
+body.admin {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+body.admin .sidebar {
+    background: #1a1a1a;
+}
+body.admin .sidebar h4,
+body.admin .sidebar h4 a {
+    color: #6A1B9A;
+}
+body.admin .sidebar .nav-link,
+body.admin .sidebar small {
+    color: #ddd;
+}
+body.admin .brand-header,
+body.admin .card,
+body.admin .stat-card {
+    background: #2a2a2a;
+    color: #e0e0e0;
+}
+body.admin .card-header,
+body.admin .modal-content {
+    background: #1e1e1e;
+}
+body.admin .modal-content .input-group-text,
+body.admin .modal-content .form-control,
+body.admin .modal-content .form-select {
+    background: #333;
+    color: #fff;
+    border: 1px solid #444;
+}
+body.admin .modal-content .form-control::placeholder,
+body.admin .modal-content .form-select option {
+    color: #aaa;
+}
+
+/* Ajustes específicos para admin products */
+body.admin .product-image.bg-light {
+    background: #2a2a2a !important;
+}
+body.admin .card,
+body.admin .card-header,
+body.admin .table {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #444;
+}
+body.admin .table thead th {
+    background: #333;
+    color: #fff;
+}
+body.admin .table tbody tr {
+    background: #1f1f1f;
 }
